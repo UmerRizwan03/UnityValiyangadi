@@ -10,25 +10,21 @@ export function getAdminApp(): App | null {
   }
 
   try {
-    // In a deployed App Hosting environment, process.env.SERVICE_ACCOUNT_JSON will not be set.
-    // In that case, we fall back to applicationDefault(), which is the standard for Google Cloud.
-    if (process.env.SERVICE_ACCOUNT_JSON) {
-      // This path is for local development.
-      const serviceAccount: ServiceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_JSON);
+    // Check if SERVICE_ACCOUNT_JSON is available (both local and Vercel env vars)
+    const serviceAccountJson = process.env.SERVICE_ACCOUNT_JSON;
+    if (serviceAccountJson) {
+      const serviceAccount: ServiceAccount = JSON.parse(serviceAccountJson);
       return initializeApp({
         credential: cert(serviceAccount),
         storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
       });
     } else {
-      // This path is for the deployed Firebase App Hosting environment.
-      return initializeApp({
-        credential: applicationDefault(),
-        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-      });
+      // Missing service account on Vercel is a fatal error
+      console.error("SERVICE_ACCOUNT_JSON not set in environment.");
+      return null;
     }
   } catch (e) {
     console.error("Error initializing Firebase Admin SDK:", e);
-    // Return null if initialization fails to prevent crashes.
     return null;
   }
 }
