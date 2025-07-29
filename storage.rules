@@ -1,0 +1,43 @@
+
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+  
+    // Helper function to check for admin role from custom claims
+    function isAdmin() {
+      return request.auth.token.role == 'admin';
+    }
+    
+    // Helper function to check if a user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Profile pictures are publicly readable.
+    // Writes are allowed only for admins or the specific user (though app logic routes this via requests).
+    match /profile_pictures/{fileName} {
+      allow read: if true;
+      allow write: if isAuthenticated(); // App logic restricts this further to admins or specific requests
+    }
+
+    // Magazine PDFs are publicly readable.
+    // Only admins can upload/overwrite them.
+    match /magazines/{magazineId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Attachments for change requests are private and can only be created by an authenticated user.
+    // Admins can read them to process requests.
+    match /request_attachments/{requestId} {
+      allow read: if isAdmin();
+      allow write: if isAuthenticated();
+    }
+    
+    // Disallow any other paths by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

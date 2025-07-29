@@ -1,0 +1,232 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 288 33% 97%; /* Lighter purple-white */
+    --foreground: 290 25% 15%;
+    --card: 288 50% 98%; /* Slightly more saturated for glass effect */
+    --card-foreground: 290 25% 15%;
+    --popover: 288 50% 98%;
+    --popover-foreground: 290 25% 15%;
+    --primary: 288 34% 52%; /* Muted Purple */
+    --primary-foreground: 300 50% 98%;
+    --secondary: 212 33% 89%; /* Muted Blue for accents */
+    --secondary-foreground: 212 25% 25%;
+    --muted: 288 20% 92%;
+    --muted-foreground: 288 10% 45%;
+    --accent: 212 34% 52%; /* Blue */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 288 33% 85%;
+    --input: 288 33% 90%;
+    --ring: 288 34% 52%;
+  }
+ 
+  .dark {
+    --background: 290 20% 8%;
+    --foreground: 290 20% 95%;
+    --card: 290 15% 12%;
+    --card-foreground: 290 20% 95%;
+    --popover: 290 15% 12%;
+    --popover-foreground: 290 20% 95%;
+    --primary: 288 44% 62%;
+    --primary-foreground: 300 50% 98%;
+    --secondary: 212 25% 20%;
+    --secondary-foreground: 212 30% 95%;
+    --muted: 290 15% 15%;
+    --muted-foreground: 290 10% 65%;
+    --accent: 212 44% 62%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 290 15% 25%;
+    --input: 290 15% 22%;
+    --ring: 288 44% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-body);
+    background-attachment: fixed;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-headline);
+  }
+}
+
+@keyframes gradient-flow {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+.animated-gradient-background {
+    background: linear-gradient(-45deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--card)), hsl(var(--secondary)));
+    background-size: 400% 400%;
+    animation: gradient-flow 15s ease infinite;
+}
+
+.tree ul {
+	position: relative;
+	padding: 1em 0;
+	white-space: nowrap;
+	margin: 0 auto;
+	text-align: center;
+}
+.tree ul::after {
+	content: '';
+	display: table;
+	clear: both;
+}
+.tree li {
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+	list-style-type: none;
+	position: relative;
+	padding: 1em 0.5em 0 0.5em;
+}
+.tree li::before, .tree li::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 50%;
+	border-top: 2px solid hsl(var(--primary));
+	width: 50%;
+	height: 1em;
+}
+.tree li::after {
+	right: auto;
+	left: 50%;
+	border-left: 2px solid hsl(var(--primary));
+}
+.tree li:only-child::after, .tree li:only-child::before {
+	display: none;
+}
+.tree li:only-child {
+	padding-top: 0;
+}
+.tree li:first-child::before, .tree li:last-child::after {
+	border: 0 none;
+}
+.tree li:last-child::before {
+	border-right: 2px solid hsl(var(--primary));
+	border-radius: 0 5px 0 0;
+}
+.tree li:first-child::after {
+	border-radius: 5px 0 0 0;
+}
+@keyframes fall-1 {
+  0% { transform: translate(0, -20vh) rotate(-10deg); opacity: 1; }
+  100% { transform: translate(-20vw, 120vh) rotate(600deg); opacity: 0.9; }
+}
+
+@keyframes fall-2 {
+  0% { transform: translate(0, -20vh) rotate(20deg); opacity: 1; }
+  100% { transform: translate(20vw, 120vh) rotate(-720deg); opacity: 0.95; }
+}
+
+@keyframes fall-3 {
+  0% { transform: translate(0, -20vh) rotate(5deg); opacity: 1; }
+  100% { transform: translate(10vw, 120vh) rotate(420deg); opacity: 0.85; }
+}
+
+.leaves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.leaf {
+  position: absolute;
+  top: -50px;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-image: radial-gradient(circle at 25% 25%, hsl(var(--primary) / 0.9), hsl(var(--primary) / 0.7));
+  opacity: 0;
+  border-radius: 0% 80% 10% 70% / 50% 90% 20% 40%;
+}
+
+.leaf:nth-child(3n) { animation: fall-1 10s linear infinite; }
+.leaf:nth-child(3n + 1) { animation: fall-2 9s linear infinite; }
+.leaf:nth-child(3n + 2) { animation: fall-3 11s linear infinite; }
+.leaf:nth-child(2n) { background-image: radial-gradient(circle at 25% 25%, hsl(var(--accent) / 0.95), hsl(var(--accent) / 0.75)); }
+.leaf:nth-child(5n) { background-image: radial-gradient(circle at 25% 25%, hsl(var(--secondary-foreground) / 0.8), hsl(var(--secondary-foreground) / 0.6)); }
+
+.leaf:nth-child(1) { left: 10%; animation-delay: -1s; }
+.leaf:nth-child(2) { left: 20%; animation-delay: -3s; }
+.leaf:nth-child(3) { left: 30%; animation-delay: -5s; }
+.leaf:nth-child(4) { left: 40%; animation-delay: -2s; }
+.leaf:nth-child(5) { left: 50%; animation-delay: -4s; }
+.leaf:nth-child(6) { left: 60%; animation-delay: -6s; }
+.leaf:nth-child(7) { left: 70%; animation-delay: -1.5s; }
+.leaf:nth-child(8) { left: 80%; animation-delay: -3.5s; }
+.leaf:nth-child(9) { left: 90%; animation-delay: -5.5s; }
+.leaf:nth-child(10) { left: 5%; animation-delay: -2.5s; }
+.leaf:nth-child(11) { left: 15%; animation-delay: -4.5s; }
+.leaf:nth-child(12) { left: 25%; animation-delay: -0.5s; }
+.leaf:nth-child(13) { left: 35%; animation-delay: -6.5s; }
+.leaf:nth-child(14) { left: 45%; animation-delay: -2.2s; }
+.leaf:nth-child(15) { left: 55%; animation-delay: -4.8s; }
+.leaf:nth-child(16) { left: 65%; animation-delay: -7s; }
+.leaf:nth-child(17) { left: 75%; animation-delay: -8s; }
+.leaf:nth-child(18) { left: 85%; animation-delay: -1.2s; }
+.leaf:nth-child(19) { left: 95%; animation-delay: -3.2s; }
+.leaf:nth-child(20) { left: 2%; animation-delay: -5.2s; }
+.leaf:nth-child(21) { left: 12%; animation-delay: -7.5s; }
+.leaf:nth-child(22) { left: 22%; animation-delay: -8.5s; }
+.leaf:nth-child(23) { left: 32%; animation-delay: -0.8s; }
+.leaf:nth-child(24) { left: 42%; animation-delay: -2.8s; }
+.leaf:nth-child(25) { left: 52%; animation-delay: -4.2s; }
+
+.leaves-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.leaves-container-foreground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 40; /* In front of hero content (z-30) but behind header (z-50) */
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+    
+
+    

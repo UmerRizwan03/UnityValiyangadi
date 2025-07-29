@@ -1,0 +1,22 @@
+run:
+  build:
+    - npm install
+    - npm run build
+  start: npm run start
+serviceAccount: app-hosting-backend
+secretEnvironmentVariables:
+  - key: ADMIN_PHONE_NUMBER
+    secret: ADMIN_PHONE_NUMBER
+    pinned: true
+  - key: TWILIO_ACCOUNT_SID
+    secret: TWILIO_ACCOUNT_SID
+    pinned: true
+  - key: TWILIO_AUTH_TOKEN
+    secret: TWILIO_AUTH_TOKEN
+    pinned: true
+  - key: TWILIO_WHATSAPP_FROM_NUMBER
+    secret: TWILIO_WHATSAPP_FROM_NUMBER
+    pinned: true
+  - key: ADMIN_WHATSAPP_TO_NUMBER
+    secret: ADMIN_WHATSAPP_TO_NUMBER
+    pinned: true
