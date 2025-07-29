@@ -31,7 +31,7 @@ export default function FlipbookViewer({ pdfUrl }: { pdfUrl:string }) {
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const book = useRef<any>(null);
+    const book = useRef<any>(null); // Use 'any' since react-pageflip has no TypeScript types for the ref
 
     useEffect(() => {
         const loadPdfAndRenderPages = async () => {
@@ -122,24 +122,38 @@ export default function FlipbookViewer({ pdfUrl }: { pdfUrl:string }) {
     return (
         <div className="flex flex-col items-center gap-4">
             <HTMLFlipBook
-                width={450}
-                height={600}
-                size="fixed"
-                minWidth={315}
-                maxWidth={1000}
-                minHeight={400}
-                maxHeight={1500}
-                maxShadowOpacity={0.5}
-                showCover={true}
-                mobileScrollSupport={true}
-                onFlip={onFlip}
-                className="shadow-2xl"
-                ref={book}
+            width={450}
+            height={600}
+            size="fixed"
+            minWidth={315}
+            maxWidth={1000}
+            minHeight={400}
+            maxHeight={1500}
+            maxShadowOpacity={0.5}
+            showCover={true}
+            mobileScrollSupport={true}
+            onFlip={onFlip}
+            className="shadow-2xl"
+            ref={book}
+            style={{}}
+            startPage={0}
+            drawShadow={true}
+            flippingTime={1000}
+            usePortrait={false}
+            startZIndex={0}
+            autoSize={true}
+            clickEventForward={true}
+            useMouseEvents={true}
+            swipeDistance={30}
+            showPageCorners={true}
+            disableFlipByClick={false} // ✅ Add this line
             >
-                {pageImages.map((imageUrl, index) => (
-                    <Page key={`page-${index}`} imageUrl={imageUrl} />
-                ))}
+            {pageImages.map((imageUrl, index) => (
+                <Page key={`page-${index}`} imageUrl={imageUrl} />
+            ))}
             </HTMLFlipBook>
+
+
 
             {numPages && (
                 <div className="flex items-center justify-center p-2 gap-4 bg-background/80 backdrop-blur-sm rounded-full shadow-lg">

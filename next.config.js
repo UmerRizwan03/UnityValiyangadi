@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  //output: 'export',
   images: {
     remotePatterns: [
       {
@@ -16,8 +16,6 @@ const nextConfig = {
         hostname: 'placehold.co',
       },
     ],
-    // The `domains` property is still useful for local development and self-hosting.
-    // An empty string for the hostname allows images from the same origin.
     domains: [''],
   },
 };

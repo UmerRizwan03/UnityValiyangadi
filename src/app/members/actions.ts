@@ -33,7 +33,7 @@ export async function deleteMemberAction(id: string): Promise<ActionResponse> {
             await submitChangeRequest({
                 type: 'delete',
                 requestedByUid: user.uid,
-                requestedByName: user.name ?? 'Unknown',
+                requestedByName: user.username ?? 'Unknown',
                 memberId: id,
                 memberName: member.name
             });

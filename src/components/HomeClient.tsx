@@ -1,7 +1,8 @@
 
 'use client';
 
-import type { Member, AuthState } from '@/lib/types';
+import type { Member} from '@/lib/types';
+import type { AuthState } from '@/lib/auth';
 import FamilyTree from '@/components/FamilyTree';
 import FirestoreError from '@/components/FirestoreError';
 import { Button } from '@/components/ui/button';

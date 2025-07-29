@@ -1,10 +1,11 @@
 
 'use server';
 
-import { addMember, deleteMember, updateMember, type NewMemberData } from '@/services/firestore';
+import { addMember, deleteMember, updateMember} from '@/services/firestore';
 import { getRequest, updateRequestStatus } from '@/services/requests';
 import { getAuthState } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
+import type { NewMemberData } from '@/lib/types';
 import { moveRequestAttachmentToProfilePicture } from '@/services/storage';
 
 type AdminActionResponse = {
@@ -35,10 +36,22 @@ export async function approveRequestAction(requestId: string): Promise<AdminActi
                 if (request.data) {
                     const payload = request.data;
                      const memberData: NewMemberData = {
-                        ...payload,
+                        name: payload.name ?? 'Unnamed Member',
+                        gender: payload.gender ?? 'Other',
+                        relationship: payload.relationship ?? 'Unknown',
                         parents: payload.parents || [],
                         dateOfDeath: payload.dateOfDeath || null,
+                        dateOfBirth: payload.dateOfBirth || null,
+                        spouseName: payload.spouseName ?? null,
+                        otherParentName: payload.otherParentName ?? null,
+                        bloodType: payload.bloodType ?? null,
+                        mobile: payload.mobile ?? null,
+                        email: payload.email ?? null,
+                        birthPlace: payload.birthPlace ?? null,
+                        occupation: payload.occupation ?? null,
+                        photoUrl: payload.photoUrl, // optional
                     };
+
                     
                     // Add member without photoUrl first to get an ID
                     const { photoUrl, ...dataWithoutPhoto } = memberData;

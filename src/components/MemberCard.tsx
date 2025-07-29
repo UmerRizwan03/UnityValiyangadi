@@ -35,7 +35,7 @@ import React, { useState, useTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { deleteMemberAction } from '@/app/members/actions';
 import { cn } from '@/lib/utils';
-import type { User as AuthUser } from '@/lib/auth';
+import type { User as AuthUser } from '@/lib/types';
 
 
 const MemberCardActions = ({ member, role }: { member: Member; role: AuthUser['role'] }) => {

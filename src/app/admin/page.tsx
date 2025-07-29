@@ -13,7 +13,7 @@ export default async function AdminDashboardPage() {
     return <NotAuthorized reason="login" message="You must be logged in as an administrator to view this page." />;
   }
 
-  if (user.role !== 'admin') {
+  if (user?.role !== 'admin') {
     return <NotAuthorized reason="permission" />;
   }
 

@@ -319,25 +319,27 @@ const FamilyTree = ({ members, authState }: { members: Member[]; authState: Auth
     const visitedIds = new Set<string>();
     
     const childrenOfAncestor = childrenMap.get(ancestorId) || [];
-    childrenOfAncestor.forEach(child => {
-        if(!visitedIds.has(child.id)) {
-            queue.push(child);
-            visitedIds.add(child.id);
-            descendants.add(child.id);
-        }
-    });
+childrenOfAncestor.forEach((child: Member) => {
+  if (!visitedIds.has(child.id)) {
+    queue.push(child);
+    visitedIds.add(child.id);
+    descendants.add(child.id);
+  }
+});
+
 
     let head = 0;
     while(head < queue.length) {
         const current = queue[head++];
         const children = childrenMap.get(current.id) || [];
-        children.forEach(child => {
-            if (!visitedIds.has(child.id)) {
-                visitedIds.add(child.id);
-                descendants.add(child.id);
-                queue.push(child);
-            }
-        });
+        children.forEach((child: Member) => {
+  if (!visitedIds.has(child.id)) {
+    visitedIds.add(child.id);
+    descendants.add(child.id);
+    queue.push(child);
+  }
+});
+
     }
 
     setHighlightedAncestorId(ancestorId);

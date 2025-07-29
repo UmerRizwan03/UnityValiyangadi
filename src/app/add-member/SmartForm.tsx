@@ -27,7 +27,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import type { User as AuthUser } from '@/lib/auth';
+import type { User as AuthUser } from '@/lib/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
@@ -77,20 +77,24 @@ export default function AddMemberForm({
   const isDeceased = form.watch('isDeceased');
 
   useEffect(() => {
-    if (initialData) {
-      form.reset({
-        ...initialData,
-        dateOfBirth: initialData.dateOfBirth || '',
-        isDeceased: !!initialData.dateOfDeath,
-        dateOfDeath: initialData.dateOfDeath || '',
-        email: initialData.email || '',
-        spouseName: initialData.spouseName || '',
-        otherParentName: initialData.otherParentName || '',
-        photo: undefined, // Don't pre-fill file input
-      });
-      setPhotoPreview(initialData.photoUrl);
-    }
-  }, [initialData, form]);
+  if (initialData) {
+    form.reset({
+      name: initialData.name,
+      gender: initialData.gender,
+      relationship: initialData.relationship,
+      parents: initialData.parents,
+      spouseName: initialData.spouseName || '',
+      otherParentName: initialData.otherParentName || '',
+      bloodType: initialData.bloodType || '',
+      dateOfBirth: initialData.dateOfBirth || '',
+      isDeceased: !!initialData.dateOfDeath,
+      dateOfDeath: initialData.dateOfDeath || '',
+      photo: undefined, // Don't pre-fill file input
+    });
+    setPhotoPreview(initialData.photoUrl); // this is fine to use separately
+  }
+}, [initialData, form]);
+
 
   function onSubmit(values: MemberFormData) {
     const formData = new FormData();

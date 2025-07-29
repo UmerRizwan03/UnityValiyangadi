@@ -1,11 +1,12 @@
 
 'use server';
 
-import { addMember as addMemberToDb, updateMember as updateMemberInDb, type NewMemberData } from '@/services/firestore';
+import { addMember as addMemberToDb, updateMember as updateMemberInDb } from '@/services/firestore';
 import { uploadProfilePicture, uploadRequestAttachment } from '@/services/storage';
 import { memberFormSchema } from './schema';
 import { revalidatePath } from 'next/cache';
 import { getAuthState } from '@/lib/auth';
+import type { NewMemberData } from '@/lib/types';
 import { submitChangeRequest } from '@/services/requests';
 
 type MemberActionResponse = {
@@ -67,10 +68,21 @@ export async function addMemberAction(formData: FormData): Promise<MemberActionR
   try {
     if (user.role === 'admin') {
       const memberData: NewMemberData = {
-          ...memberPayload,
-          parents: memberPayload.parents || [],
-          dateOfDeath: memberPayload.dateOfDeath || null,
-      };
+        name: memberPayload.name,
+        gender: memberPayload.gender,
+        relationship: memberPayload.relationship,
+        parents: memberPayload.parents || [],
+        spouseName: memberPayload.spouseName ?? null,
+        otherParentName: memberPayload.otherParentName ?? null,
+        bloodType: memberPayload.bloodType ?? null,
+        dateOfBirth: memberPayload.dateOfBirth ?? null,
+        dateOfDeath: memberPayload.dateOfDeath ?? null,
+        mobile: memberPayload.mobile ?? null,
+        email: memberPayload.email ?? null,
+        birthPlace: memberPayload.birthPlace ?? null,
+        occupation: memberPayload.occupation ?? null,
+    };
+
       const newMemberId = await addMemberToDb(memberData);
 
       if (photo instanceof File && photo.size > 0) {
@@ -82,12 +94,11 @@ export async function addMemberAction(formData: FormData): Promise<MemberActionR
       return { success: true, message: `${memberData.name} has been added to the family tree.` };
     } else {
         const submissionData: Partial<NewMemberData & {photoUrl?: string}> = { ...validatedFields.data };
-        if (submissionData.photo instanceof File && submissionData.photo.size > 0) {
+        if (photo instanceof File && photo.size > 0) {
             // For non-admins, upload attachment for review
-            const tempPhotoUrl = await uploadRequestAttachment(submissionData.photo, `req_${Date.now()}`);
+            const tempPhotoUrl = await uploadRequestAttachment(photo, `req_${Date.now()}`);
             submissionData.photoUrl = tempPhotoUrl;
         }
-        delete submissionData.photo;
 
         await submitChangeRequest({
             type: 'add',
@@ -131,10 +142,21 @@ export async function updateMemberAction(id: string, formData: FormData): Promis
     try {
         if (user.role === 'admin') {
             const updatePayload: Partial<NewMemberData> = {
-                ...memberPayload,
+                name: memberPayload.name,
+                gender: memberPayload.gender,
+                relationship: memberPayload.relationship,
                 parents: memberPayload.parents || [],
-                dateOfDeath: memberPayload.dateOfDeath || null,
+                spouseName: memberPayload.spouseName ?? null,
+                otherParentName: memberPayload.otherParentName ?? null,
+                bloodType: memberPayload.bloodType ?? null,
+                dateOfBirth: memberPayload.dateOfBirth ?? null,
+                dateOfDeath: memberPayload.dateOfDeath ?? null,
+                mobile: memberPayload.mobile ?? null,
+                email: memberPayload.email ?? null,
+                birthPlace: memberPayload.birthPlace ?? null,
+                occupation: memberPayload.occupation ?? null,
             };
+
 
             if (photo instanceof File && photo.size > 0) {
                 const photoUrl = await uploadProfilePicture(photo, id);
@@ -148,11 +170,10 @@ export async function updateMemberAction(id: string, formData: FormData): Promis
             return { success: true, message: `${updatePayload.name} has been successfully updated.` };
         } else {
             const submissionData: Partial<NewMemberData & {photoUrl?: string}> = { ...validatedFields.data };
-            if (submissionData.photo instanceof File && submissionData.photo.size > 0) {
-                const tempPhotoUrl = await uploadRequestAttachment(submissionData.photo, `req_${id}_${Date.now()}`);
+            if (photo instanceof File && photo.size > 0) {
+                const tempPhotoUrl = await uploadRequestAttachment(photo, `req_${id}_${Date.now()}`);
                 submissionData.photoUrl = tempPhotoUrl;
             }
-            delete submissionData.photo;
             
             // Member submitting an edit request
             await submitChangeRequest({

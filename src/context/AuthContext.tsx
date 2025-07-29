@@ -28,30 +28,26 @@ export const AuthProvider = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        // You might want to fetch the full user data from Firestore here
-        // based on firebaseUser.uid, similar to how getAuthState does it.
-        // For now, let's just set a basic user object.
-        const user: User = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          username: firebaseUser.displayName || 'N/A', // Or fetch from claims/firestore
-          role: (await firebaseUser.getIdTokenResult()).claims.role as User['role'] || 'member', // Get role from claims
-          createdAt: firebaseUser.metadata.creationTime ? new Date(firebaseUser.metadata.creationTime) : new Date(),
-          updatedAt: new Date(),
-          // Add other user properties as needed
-        };
-        setAuthState({ isLoggedIn: true, user });
-      } else {
-        setAuthState({ isLoggedIn: false, user: null });
-      }
-      setIsLoading(false);
-    });
+  if (!auth) return;
 
-    // Clean up the subscription on unmount
-    return () => unsubscribe();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    if (firebaseUser) {
+      const user: User = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email ?? 'no-email@unknown.com',
+        username: firebaseUser.displayName || 'N/A',
+        role: (await firebaseUser.getIdTokenResult()).claims.role as User['role'] || 'member',
+        phoneNumber: firebaseUser.phoneNumber ?? '', // ✅ Provide fallback if null
+      };
+      setAuthState({ isLoggedIn: true, user });
+    } else {
+      setAuthState({ isLoggedIn: false, user: null });
+    }
+    setIsLoading(false);
+  });
+
+  return () => unsubscribe();
+}, []);
 
   return (
     <AuthContext.Provider value={{ authState, isLoading }}>
