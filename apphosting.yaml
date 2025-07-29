@@ -3,7 +3,16 @@ run:
     - npm install
     - npm run build
   start: npm run start
+  env:
+    NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyCunqyzcu65j5raNBQaqXwKmOqQe10eyt4"
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "kith-and-kin-43tyu.firebaseapp.com"
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID: "kith-and-kin-43tyu"
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "kith-and-kin-43tyu.firebasestorage.app"
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "915894323264"
+    NEXT_PUBLIC_FIREBASE_APP_ID: "1:915894323264:web:ab3bb9e19fe8be1a46b7a5"
+
 serviceAccount: app-hosting-backend
+
 secretEnvironmentVariables:
   - key: ADMIN_PHONE_NUMBER
     secret: ADMIN_PHONE_NUMBER
